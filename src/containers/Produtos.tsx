@@ -1,22 +1,18 @@
-import { Produto as ProdutoType } from '../App'
+import * as App from '../App'
 import Produto from '../components/Produto'
 
 import * as S from './styles'
 
 type Props = {
-  produtos: ProdutoType[]
-  favoritos: ProdutoType[]
-  adicionarAoCarrinho: (produto: ProdutoType) => void
-  favoritar: (produto: ProdutoType) => void
+  produtos: App.Produto[]
+  favoritos: App.Produto[]
 }
 
 const ProdutosComponent = ({
   produtos,
-  favoritos,
-  adicionarAoCarrinho,
-  favoritar
+  favoritos
 }: Props) => {
-  const produtoEstaNosFavoritos = (produto: ProdutoType) => {
+  const produtoEstaNosFavoritos = (produto: App.Produto) => {
     const produtoId = produto.id
     const IdsDosFavoritos = favoritos.map((f) => f.id)
 
@@ -28,11 +24,8 @@ const ProdutosComponent = ({
       <S.Produtos>
         {produtos.map((produto) => (
           <Produto
-            estaNosFavoritos={produtoEstaNosFavoritos(produto)}
             key={produto.id}
             produto={produto}
-            favoritar={favoritar}
-            aoComprar={adicionarAoCarrinho}
           />
         ))}
       </S.Produtos>

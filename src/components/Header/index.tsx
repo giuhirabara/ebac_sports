@@ -1,20 +1,22 @@
 import * as S from './styles'
 
-import { Produto } from '../../App'
-
 import cesta from '../../assets/cesta.png'
-import { paraReal } from '../Produto'
+import { useSelector } from 'react-redux'
 
-type Props = {
-  itensNoCarrinho: Produto[]
-  favoritos: Produto[]
-}
+import { rootReducer } from '../../store/store'
 
-const Header = ({ itensNoCarrinho, favoritos }: Props) => {
-  const valorTotal = itensNoCarrinho.reduce((acc, item) => {
+const Header = () => {
+  const itens = useSelector((state: rootReducer) => state.carrinho.itens)
+  const favoritos = useSelector((state: rootReducer) => state.favoritos.itens)
+
+  const valorTotal = itens.reduce((acc, item) => {
     acc += item.preco
     return acc
   }, 0)
+
+  function paraReal(valorTotal: number): import("react").ReactNode {
+    throw new Error('Function not implemented.')
+  }
 
   return (
     <S.Header>
@@ -23,7 +25,7 @@ const Header = ({ itensNoCarrinho, favoritos }: Props) => {
         <span>{favoritos.length} favoritos</span>
         <img src={cesta} />
         <span>
-          {itensNoCarrinho.length} itens, valor total: {paraReal(valorTotal)}
+          {itens.length} itens, valor total: {paraReal(valorTotal)}
         </span>
       </div>
     </S.Header>

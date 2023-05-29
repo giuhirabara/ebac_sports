@@ -1,24 +1,32 @@
-import { Produto as ProdutoType } from '../../App'
+import { useDispatch, useSelector } from 'react-redux'
 import * as S from './styles'
+import { Produto, Produto as ProdutoType } from '../../App'
+
+import { adcionarCarrinho } from '../../store/reducers/carrinhoSlice'
+import { adicionarFavorito, removerFavorito } from '../../store/reducers/favoritoSlice'
 
 type Props = {
   produto: ProdutoType
-  aoComprar: (produto: ProdutoType) => void
-  favoritar: (produto: ProdutoType) => void
-  estaNosFavoritos: boolean
 }
 
-export const paraReal = (valor: number) =>
-  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
-    valor
-  )
+const ProdutoComponent = ({ produto }: Props) => {
+  const dispatch = useDispatch();
+  const favoritos = useSelector((state: { favoritos: Produto[] }) => state.favoritos);
 
-const ProdutoComponent = ({
-  produto,
-  aoComprar,
-  favoritar,
-  estaNosFavoritos
-}: Props) => {
+  const estaNosFavoritos = favoritos.some((item) => item.id === produto.id);
+
+  const adicionarOuRemoverDosFavoritos = () => {
+    if (estaNosFavoritos) {
+      dispatch(removerFavorito(produto.id));
+    } else {
+      dispatch(adicionarFavorito(produto));
+    }
+  };
+
+  function paraReal(preco: number): import("react").ReactNode {
+    throw new Error('Function not implemented.')
+  }
+
   return (
     <S.Produto>
       <S.Capa>
@@ -28,16 +36,16 @@ const ProdutoComponent = ({
       <S.Prices>
         <strong>{paraReal(produto.preco)}</strong>
       </S.Prices>
-      <S.BtnComprar onClick={() => favoritar(produto)} type="button">
+      <S.BtnComprar onClick={adicionarOuRemoverDosFavoritos} type="button">
         {estaNosFavoritos
           ? '- Remover dos favoritos'
           : '+ Adicionar aos favoritos'}
       </S.BtnComprar>
-      <S.BtnComprar onClick={() => aoComprar(produto)} type="button">
+      <S.BtnComprar onClick={() => adcionarCarrinho(produto)} type="button">
         Adicionar ao carrinho
       </S.BtnComprar>
     </S.Produto>
-  )
-}
+  );
+};
 
-export default ProdutoComponent
+export default ProdutoComponent;
